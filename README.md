@@ -9,17 +9,24 @@ Extracted from seanpfinn.com, where it plays on every page.
 
 ## Features
 
-- Album art, title, artist, and full skip-back / play-pause / skip-forward
-  transport controls.
-- Autoplay that actually works around browser policy: starts muted (which
-  every browser allows), then unmutes itself on the visitor's first tap,
-  click, or keypress anywhere on the page.
-- Random starting track on each page load.
+- Album art, title, and artist appear as soon as a track is cued — no need
+  to press play first.
+- Full skip-back / play-pause / skip-forward transport controls.
+- Scrubbable playback progress bar with a live time label; click/tap
+  anywhere on it to seek.
+- A drag handle beneath the progress bar — swipe up (or tap) to open an
+  "Up Next" panel listing the next few tracks in the playlist, each with
+  its own art/title/artist, clickable to jump straight to it. Swipe down
+  (or tap again) to close it.
+- Random starting track on each page load, chosen with no flash of track 1
+  beforehand.
 - Ticker/marquee for song titles that don't fit — scrolls out and back once
   per 25s cycle, not continuously.
 - Automatically strips YouTube's auto-generated "Artist - Topic" channel
   suffix, and falls back to splitting "Artist - Title" out of the video
   title when YouTube doesn't report a channel name.
+- Loads cued and ready to go, but never autoplays — playback only starts
+  when the visitor presses play.
 - On mobile: after 10 seconds idle, slides most of the way off-screen,
   leaving the album art peeking in as a handle. Swipe left (or tap the
   peek) to bring it back, swipe right to park it again — at any time, not
@@ -79,15 +86,17 @@ edit the fallback list directly.
 - **Single instance.** The widget looks for `#miniplayer` before creating
   itself, so including the script twice (or on multiple pages that share a
   layout) won't double it up — but it only supports one player per page.
-- **Autoplay-with-sound is blocked by every browser** without a prior user
-  gesture on the page. There's no way around this in JS — starting muted
-  and unmuting on first interaction (already handled) is the standard
-  workaround and gets you as close to "just plays" as policy allows.
 - **No way to know a playlist's length up front.** The IFrame API doesn't
   expose playlist metadata before loading it once, which is why random
   track selection works by loading the playlist, reading its length off
-  the first response, then reloading at a random index — you'll see a very
-  brief flash of track 1's info before it settles on the random pick.
+  the first response, then reloading at a random index — the widget holds
+  off showing metadata or playback state until after that re-cue, so
+  there's no flash of track 1 before it settles on the random pick.
+- **Title/artist metadata comes from noembed.com** (a free, no-API-key
+  oEmbed proxy) whenever YouTube's own `getVideoData()` hasn't filled in
+  yet, which is normal immediately after cueing a track. If noembed.com is
+  ever unreachable, the title/artist just won't populate until playback
+  starts and YouTube's own data becomes available.
 - The mobile breakpoint is `50.5625rem` (809px) — change the `@media` query
   in `miniplayer.css` (and the matching `isMobile()` check in
   `miniplayer.js`) if you want a different cutoff.
