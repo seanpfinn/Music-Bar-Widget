@@ -2,6 +2,33 @@
    MINIPLAYER — pinned to the bottom of every page, floats above content.
    Pair with miniplayer.js, which injects the markup and drives it.
    ================================ */
+
+/* Entrance animation — miniplayer.js adds this class alongside `.miniplayer`
+   when it injects the widget, so it fades/blurs in on load instead of just
+   popping in. Scoped to its own class name (not a generic `.blur-in`
+   utility) so it can't collide with a similarly-named class the host page
+   might already have.
+
+   Fade + blur only, no slide/transform: `.miniplayer` already has its own
+   persistent `transform` (translateX(-50%) for centering, plus the
+   swipe-gesture and mobile-layout transforms) — a CSS animation replaces an
+   element's whole `transform` rather than combining with it, so animating
+   transform here would fight those and leave the pill visibly
+   mis-positioned for the animation's full duration. */
+@keyframes miniplayerBlurIn {
+  from {
+    opacity: 0;
+    filter: blur(1.25rem);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+.miniplayer-blur-in {
+  animation: miniplayerBlurIn 1.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 .miniplayer {
   /* Fixed width, centered — on mobile (media query below) it switches to
      filling the container between margins instead. */
