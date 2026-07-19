@@ -1,4 +1,4 @@
-# Music Bar
+# Music Box
 
 A persistent, site-wide mini music player. Pin it to the bottom of the
 screen on any site and it follows visitors from page to page, playing a
@@ -18,8 +18,9 @@ Extracted from seanpfinn.com, where it plays on every page.
   "Up Next" panel listing the next few tracks in the playlist, each with
   its own art/title/artist, clickable to jump straight to it. Swipe down
   (or tap again) to close it.
-- Random starting track on each page load, chosen with no flash of track 1
-  beforehand.
+- Shuffles the playlist: each page load walks the tracks in a fresh random
+  order — next/previous and end-of-track auto-advance all follow it — starting
+  on a random track with no flash of track 1 beforehand.
 - Ticker/marquee for song titles that don't fit — scrolls out and back once
   per 25s cycle, not continuously.
 - Automatically strips YouTube's auto-generated "Artist - Topic" channel
@@ -86,12 +87,14 @@ edit the fallback list directly.
 - **Single instance.** The widget looks for `#miniplayer` before creating
   itself, so including the script twice (or on multiple pages that share a
   layout) won't double it up — but it only supports one player per page.
-- **No way to know a playlist's length up front.** The IFrame API doesn't
-  expose playlist metadata before loading it once, which is why random
-  track selection works by loading the playlist, reading its length off
-  the first response, then reloading at a random index — the widget holds
-  off showing metadata or playback state until after that re-cue, so
-  there's no flash of track 1 before it settles on the random pick.
+- **Shuffle is done client-side.** YouTube's own `setShuffle()` and
+  array-cueing are unreliable for a playlist loaded by ID (it keeps playing
+  in canonical order, and a playlist doesn't fire an end-of-track event to
+  intercept), so the widget reads the playlist's video IDs once, keeps its
+  own shuffled order of them, and plays single videos it controls —
+  advancing through that order on next/previous and when each track ends. It
+  holds off showing metadata until the first shuffled track is cued, so
+  there's no flash of track 1.
 - **Title/artist metadata comes from noembed.com** (a free, no-API-key
   oEmbed proxy) whenever YouTube's own `getVideoData()` hasn't filled in
   yet, which is normal immediately after cueing a track. If noembed.com is
