@@ -430,6 +430,9 @@
       const target = e.changedTouches[0].target;
       touchStartX = null;
       touchStartY = null;
+      // A drag that began on the scrubber is a seek, not a park-swipe — its
+      // own pointer handler already handled it, so bail before parking.
+      if (target && target.closest && target.closest('.miniplayer-progress')) return;
       const hidden = miniplayer.classList.contains('is-hidden');
       const horizontal = Math.abs(dx) > Math.abs(dy);
       const isTap = Math.abs(dx) < 8 && Math.abs(dy) < 8;
