@@ -49,6 +49,14 @@
     html.dark body { background: #09090b; color: #fafafa; }
     html.dark .demo-copy p { color: #a1a1aa; }
     html.dark .demo-toggle { background: #09090b; color: #fafafa; border-color: #27272a; }
+    /* On mobile, sit the copy + toggle in the top half of the screen instead
+       of vertically centered, leaving the pinned player room at the bottom. */
+    @media (max-width: 50.5625rem) {
+      body {
+        align-items: flex-start;
+        padding-top: 3rem;
+      }
+    }
   </style>
 </head>
 <body>

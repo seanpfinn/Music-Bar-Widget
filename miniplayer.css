@@ -167,7 +167,7 @@
   font-size: 0.75rem;
   font-weight: 400;
   letter-spacing: -0.12px;
-  color: rgba(9, 9, 11, 0.65);
+  color: #6e6e6e;
   transition: color 0.3s ease;
 }
 
@@ -343,10 +343,10 @@
 .miniplayer-upnext-label {
   font-family: var(--font, 'Geist', -apple-system, BlinkMacSystemFont, sans-serif);
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.16px;
   line-height: 1;
-  color: rgba(9, 9, 11, 0.65);
+  color: #6e6e6e;
   margin: 0.625rem 0;
   transition: color 0.3s ease;
 }
@@ -413,7 +413,7 @@
   font-weight: 400;
   letter-spacing: -0.12px;
   line-height: 1;
-  color: rgba(9, 9, 11, 0.65);
+  color: #6e6e6e;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
