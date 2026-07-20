@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="theme-light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,12 +9,10 @@
   <link rel="stylesheet" href="miniplayer.css" />
   <style>
     * { box-sizing: border-box; }
-    html { background: #EBEBEB; }
     body {
       margin: 0;
       min-height: 100vh;
       font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #EBEBEB;
       color: #09090b;
       display: flex;
       align-items: center;
@@ -34,23 +32,90 @@
       line-height: 1.5;
       margin: 0 0 0.5rem;
     }
-    .demo-toggle {
-      margin-top: 1.5rem;
-      padding: 0.5rem 1rem;
-      border-radius: 999px;
-      border: 1px solid #e4e4e7;
-      background: #fff;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 0.875rem;
+
+    /* ── Background presets ────────────────────────────────────────────────
+       Light and Dark are the two variants miniplayer.css ships with; Warm and
+       Night are here purely to show how the translucent pill (and its
+       backdrop blur) reads over a non-flat, colored background. The dark-ish
+       presets also set .dark on <html>, which is the hook miniplayer.css uses
+       for its dark pill. Your project's own theme system replaces all of this. */
+    html { background: #EBEBEB; }
+
+    html.theme-light,
+    html.theme-light body { background: #EBEBEB; }
+
+    html.theme-dark,
+    html.theme-dark body { background: #09090b; }
+
+    html.theme-warm { background: #FBEFE6; }
+    html.theme-warm body {
+      background:
+        radial-gradient(ellipse 70% 60% at 15% 18%, rgba(255, 214, 165, 0.95), transparent 62%),
+        radial-gradient(ellipse 70% 60% at 85% 78%, rgba(255, 170, 200, 0.90), transparent 62%),
+        #FBEFE6;
     }
-    /* Minimal dark-mode demo so you can see the .dark variant in miniplayer.css.
-       Your project's own theme system replaces this. */
-    html.dark { background: #09090b; }
-    html.dark body { background: #09090b; color: #fafafa; }
+
+    html.theme-night { background: #0b1020; }
+    html.theme-night body {
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 18%, rgba(99, 102, 241, 0.60), transparent 62%),
+        radial-gradient(ellipse 70% 60% at 82% 76%, rgba(217, 70, 239, 0.45), transparent 62%),
+        #0b1020;
+    }
+
+    /* Text colors follow the light/dark split, not the individual preset. */
+    html.dark body { color: #fafafa; }
     html.dark .demo-copy p { color: #a1a1aa; }
-    html.dark .demo-toggle { background: #09090b; color: #fafafa; border-color: #27272a; }
-    /* On mobile, sit the copy + toggle in the top half of the screen instead
+
+    /* ── Preset switcher ───────────────────────────────────────────────── */
+    .demo-themes-label {
+      margin: 1.75rem 0 0.5rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #71717a;
+    }
+    html.dark .demo-themes-label { color: #a1a1aa; }
+
+    .demo-themes {
+      display: inline-flex;
+      gap: 0.125rem;
+      padding: 0.25rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .demo-theme-btn {
+      padding: 0.375rem 0.875rem;
+      border: none;
+      border-radius: 999px;
+      background: none;
+      font-family: inherit;
+      font-size: 0.8125rem;
+      color: #09090b;
+      opacity: 0.55;
+      cursor: pointer;
+      transition: opacity 0.15s ease, background-color 0.15s ease;
+    }
+    .demo-theme-btn:hover { opacity: 0.85; }
+    .demo-theme-btn.is-active {
+      opacity: 1;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16);
+    }
+    html.dark .demo-themes {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+    html.dark .demo-theme-btn { color: #fafafa; }
+    html.dark .demo-theme-btn.is-active {
+      background: rgba(255, 255, 255, 0.18);
+      box-shadow: none;
+    }
+
+    /* On mobile, sit the copy + switcher in the top half of the screen instead
        of vertically centered, leaving the pinned player room at the bottom. */
     @media (max-width: 50.5625rem) {
       body {
@@ -64,16 +129,40 @@
 
   <div class="demo-copy">
     <h1>Music Box</h1>
-    <p>A persistent, site-wide mini player. It's already playing (muted — tap anywhere to unmute), pinned to the bottom of this page.</p>
+    <p>A persistent, site-wide mini player, pinned to the bottom of this page. It loads cued and ready — press play to start. Tracks play in shuffled order; drag the scrubber to seek, or pull the handle up for Up Next.</p>
     <p>On mobile, wait 10 seconds and it'll slide most of the way off-screen — swipe it back in.</p>
-    <button class="demo-toggle" id="demo-dark-toggle" type="button">Toggle dark mode</button>
+
+    <p class="demo-themes-label">See it on another background</p>
+    <div class="demo-themes" role="group" aria-label="Background preset">
+      <button class="demo-theme-btn is-active" data-theme="light" type="button" aria-pressed="true">Light</button>
+      <button class="demo-theme-btn" data-theme="dark"  type="button" aria-pressed="false">Dark</button>
+      <button class="demo-theme-btn" data-theme="warm"  type="button" aria-pressed="false">Warm</button>
+      <button class="demo-theme-btn" data-theme="night" type="button" aria-pressed="false">Night</button>
+    </div>
   </div>
 
   <script src="miniplayer.js"></script>
   <script>
-    document.getElementById('demo-dark-toggle').addEventListener('click', () => {
-      document.documentElement.classList.toggle('dark');
-    });
+    (function () {
+      const PRESETS = ['light', 'dark', 'warm', 'night'];
+      // Which presets are dark enough to want miniplayer.css's dark pill.
+      const DARK_PRESETS = { dark: true, night: true };
+      const root = document.documentElement;
+      const btns = document.querySelectorAll('.demo-theme-btn');
+
+      function setPreset(name) {
+        PRESETS.forEach(p => root.classList.remove('theme-' + p));
+        root.classList.add('theme-' + name);
+        root.classList.toggle('dark', !!DARK_PRESETS[name]);
+        btns.forEach(b => {
+          const on = b.dataset.theme === name;
+          b.classList.toggle('is-active', on);
+          b.setAttribute('aria-pressed', String(on));
+        });
+      }
+
+      btns.forEach(b => b.addEventListener('click', () => setPreset(b.dataset.theme)));
+    })();
   </script>
 </body>
 </html>
