@@ -68,8 +68,11 @@
     html.dark .demo-copy p { color: #a1a1aa; }
 
     /* ── Preset switcher ───────────────────────────────────────────────── */
-    .demo-themes-label {
-      margin: 1.75rem 0 0.5rem;
+    /* Scoped with .demo-copy so it outranks `.demo-copy p` above — otherwise
+       that rule's margin wins and this top margin never applies. */
+    .demo-copy .demo-themes-label {
+      /* Extra top margin sets the copy apart from the preset switcher below. */
+      margin: 2.75rem 0 0.5rem;
       font-size: 0.75rem;
       letter-spacing: 0.06em;
       text-transform: uppercase;
@@ -129,8 +132,8 @@
 
   <div class="demo-copy">
     <h1>Music Box</h1>
-    <p>A persistent, site-wide mini player, pinned to the bottom of this page. It loads cued and ready — press play to start. Tracks play in shuffled order; drag the scrubber to seek, or pull the handle up for Up Next.</p>
-    <p>On mobile, wait 10 seconds and it'll slide most of the way off-screen — swipe it back in.</p>
+    <p>A persistent, site-wide mini player, pinned to the bottom of this page. Press play to start — tracks play in shuffled order.</p>
+    <p>On mobile, it slides off-screen after 10 seconds — swipe it back in.</p>
 
     <p class="demo-themes-label">See it on another background</p>
     <div class="demo-themes" role="group" aria-label="Background preset">
