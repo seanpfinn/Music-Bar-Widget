@@ -507,7 +507,9 @@
   .miniplayer {
     left: 1rem;
     right: 1rem;
-    bottom: 0.75rem;
+    /* Standalone mobile: lift the box 10% of the viewport height off the
+       bottom edge instead of hugging it. */
+    bottom: 10vh;
     width: auto;
     transform: none;
     padding: 0.5rem 0.5rem 0.375rem;
